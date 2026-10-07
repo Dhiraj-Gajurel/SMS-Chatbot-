@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Online Admission Inquiry — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 36px 0; box-shadow: var(--shadow-border);">
+    <div class="container">
+        <h1 style="font-size: 2rem; color: var(--vercel-black);">Online Admission Application</h1>
+        <p style="color: var(--vercel-text-muted); font-size: 0.95rem;">Complete the form below to inquire about enrollment for the upcoming academic session.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container" style="max-width: 760px;">
+        <div style="background: white; padding: 36px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 1.35rem; margin-bottom: 24px; box-shadow: 0 1px 0 rgba(0,0,0,0.06); padding-bottom: 12px; color: var(--vercel-black);">Student Application Details</h2>
+            
+            <form action="{{ url_for('public.admission') }}" method="POST">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Student Full Name *</label>
+                        <input type="text" name="student_name" required class="form-control" placeholder="e.g. Aayush Maharjan…">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Parent / Guardian Name *</label>
+                        <input type="text" name="guardian_name" required class="form-control" placeholder="e.g. Ramesh Maharjan…">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Contact Phone Number *</label>
+                        <input type="tel" name="phone" required class="form-control" placeholder="e.g. +977 9841234567…">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="e.g. parent@example.com…">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Grade Applying For *</label>
+                        <select name="grade_applying" required class="form-control" style="font-size: 16px;">
+                            <option value="">Select Target Grade…</option>
+                            <option value="Pre-Primary (Nursery/KG)">Pre-Primary (Nursery / Playgroup / KG)</option>
+                            <option value="Class 1 to 5">Basic Level (Class 1 – 5)</option>
+                            <option value="Class 6 to 8">Basic Level (Class 6 – 8)</option>
+                            <option value="Class 9 & 10 (SEE)">Secondary Level (Class 9 & 10)</option>
+                            <option value="+2 Science / Management">+2 Stream (Science / Management)</option>
+                            <option value="Technical & Vocational">Technical & Vocational Education</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Previous School Attended</label>
+                        <input type="text" name="previous_school" class="form-control" placeholder="e.g. ABC Academy, Kathmandu…">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Additional Message / Inquiries</label>
+                    <textarea name="message" class="form-control" rows="4" placeholder="Specify any academic achievements or inquiry details…"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.9375rem; margin-top: 8px;">Submit Admission Application <i class="fas fa-arrow-right"></i></button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

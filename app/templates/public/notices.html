@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Notices & Announcements — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">Notice Board & Announcements</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">Official circulars, examination routines, vacancy notices, and results.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <!-- SEARCH & FILTER BAR -->
+        <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 35px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <form action="{{ url_for('public.notices') }}" method="GET" style="display: flex; gap: 10px; width: 100%; max-width: 450px;">
+                <input type="text" name="q" value="{{ search_q }}" placeholder="Search notices by keyword..." class="form-control" style="flex: 1;">
+                <button type="submit" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.85rem;"><i class="fas fa-search"></i> Search</button>
+            </form>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="{{ url_for('public.notices', category='all') }}" class="btn {% if category == 'all' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if category != 'all' %}var(--primary-dark){% endif %}; padding: 6px 14px; font-size: 0.8rem;">All</a>
+                <a href="{{ url_for('public.notices', category='Result') }}" class="btn {% if category == 'Result' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if category != 'Result' %}var(--primary-dark){% endif %}; padding: 6px 14px; font-size: 0.8rem;">Results</a>
+                <a href="{{ url_for('public.notices', category='Vacancy') }}" class="btn {% if category == 'Vacancy' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if category != 'Vacancy' %}var(--primary-dark){% endif %}; padding: 6px 14px; font-size: 0.8rem;">Vacancy</a>
+                <a href="{{ url_for('public.notices', category='Exam') }}" class="btn {% if category == 'Exam' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if category != 'Exam' %}var(--primary-dark){% endif %}; padding: 6px 14px; font-size: 0.8rem;">Exam Routine</a>
+                <a href="{{ url_for('public.notices', category='Quotation') }}" class="btn {% if category == 'Quotation' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if category != 'Quotation' %}var(--primary-dark){% endif %}; padding: 6px 14px; font-size: 0.8rem;">Quotation</a>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            {% if notices %}
+                {% for n in notices %}
+                <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display: flex; gap: 20px; align-items: flex-start; transition: var(--transition);">
+                    <div class="notice-date-badge" style="width: 65px; height: 65px;">
+                        <span class="day" style="font-size: 1.4rem;">{{ n.published_date.strftime('%d') }}</span>
+                        <span class="month" style="font-size: 0.75rem;">{{ n.published_date.strftime('%b') }}</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="margin-bottom: 6px;">
+                            <span class="notice-badge {% if n.is_urgent %}badge-urgent{% else %}badge-general{% endif %}">{{ n.category }}</span>
+                            <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 10px;"><i class="fas fa-calendar-alt"></i> {{ n.published_date.strftime('%B %d, %Y') }}</span>
+                        </div>
+                        <h3 style="font-size: 1.25rem; margin-bottom: 8px;"><a href="{{ url_for('public.notice_detail', id=n.id) }}" style="color: var(--primary-dark);">{{ n.title }}</a></h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px;">{{ n.content[:160] }}...</p>
+                        <a href="{{ url_for('public.notice_detail', id=n.id) }}" style="font-weight: 700; font-size: 0.9rem;">Read Full Notice <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 50px; background: white; border-radius: 12px;">
+                    <i class="fas fa-folder-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 15px;"></i>
+                    <p style="color: var(--text-muted);">No notices matching your criteria were found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

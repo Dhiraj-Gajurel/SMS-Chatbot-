@@ -1,0 +1,115 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Hero Slider Banners — Admin Console{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div>
+        <h1 style="font-size: 1.5rem; color: var(--text-dark); letter-spacing: -0.03em;">Hero Slider Banners</h1>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">Manage images, captions, and links displayed in the homepage slick slider carousel.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <!-- BANNERS LIST TABLE -->
+    <div class="table-card">
+        <div class="table-header">
+            <h3 style="font-size: 1rem; color: var(--text-dark);"><i class="fas fa-images"></i> Active & Configured Banners</h3>
+            <span style="font-size: 0.75rem; font-family: 'Geist Mono', monospace; color: var(--text-muted);">{{ banners|length }} Banners</span>
+        </div>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Image</th>
+                    <th>Title & Subtitle</th>
+                    <th>Button Target</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if banners %}
+                    {% for b in banners %}
+                    <tr>
+                        <td style="font-family: 'Geist Mono', monospace; font-weight: 600;">#{{ b.order }}</td>
+                        <td style="width: 90px;">
+                            <img src="{{ url_for('static', filename='images/' + b.image_url) if 'hero' in b.image_url or 'kankali' in b.image_url else url_for('static', filename=b.image_url) }}" style="width: 80px; height: 48px; object-fit: cover; border-radius: var(--radius-sm); box-shadow: var(--shadow-border);" alt="{{ b.title }}">
+                        </td>
+                        <td>
+                            <strong style="display: block; color: var(--text-dark); font-size: 0.875rem;">{{ b.title }}</strong>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">{{ b.subtitle }}</span>
+                        </td>
+                        <td>
+                            <span class="status-pill status-contacted" style="font-size: 0.7rem;">{{ b.button_text }}</span>
+                            <span style="display: block; font-size: 0.75rem; font-family: 'Geist Mono', monospace; color: var(--text-muted);">{{ b.button_url }}</span>
+                        </td>
+                        <td>
+                            {% if b.is_active %}
+                                <span class="status-pill status-admitted">Active</span>
+                            {% else %}
+                                <span class="status-pill status-pending">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                                <form action="{{ url_for('admin.toggle_banner', id=b.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline" title="Toggle Status"><i class="fas {% if b.is_active %}fa-eye-slash{% else %}fa-eye{% endif %}"></i></button>
+                                </form>
+                                <form action="{{ url_for('admin.delete_banner', id=b.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Delete this banner slide?');">
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No hero banners configured yet.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ADD NEW HERO BANNER FORM -->
+    <div style="background: white; padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); height: fit-content;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-dark); box-shadow: 0 1px 0 rgba(0,0,0,0.06); padding-bottom: 10px;"><i class="fas fa-plus-circle"></i> Add Hero Slide</h3>
+        
+        <form action="{{ url_for('admin.add_banner') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Slide Title *</label>
+                <input type="text" name="title" required class="form-control" placeholder="e.g. Welcome to XYZ School…">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Subtitle Caption</label>
+                <input type="text" name="subtitle" class="form-control" placeholder="e.g. Shaping Future Leaders…">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Banner Background Image *</label>
+                <input type="file" name="banner_file" class="form-control" accept="image/*" style="font-size: 0.8125rem;">
+                <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: block;">Recommended size: 1920x1080 (16:9 ratio).</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Button Action Text</label>
+                <input type="text" name="button_text" class="form-control" value="Explore Academics" placeholder="e.g. Apply Now…">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Button Target Link URL</label>
+                <input type="text" name="button_url" class="form-control" value="/academics" placeholder="e.g. /admission-inquiry…">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Slide Order Position</label>
+                <input type="number" name="order" class="form-control" value="{{ (banners|length) + 1 }}" min="1">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px; margin-top: 8px;">Upload & Add Slide <i class="fas fa-upload"></i></button>
+        </form>
+    </div>
+</div>
+{% endblock %}

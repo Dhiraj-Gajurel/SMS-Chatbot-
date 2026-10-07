@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Facilities — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">School Facilities</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">State-of-the-art infrastructure providing an enriched learning experience.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="facilities-grid">
+            {% if facilities %}
+                {% for f in facilities %}
+                <div class="facility-card">
+                    <div class="facility-icon"><i class="fas {{ f.icon }}"></i></div>
+                    <h3 style="font-size: 1.3rem;">{{ f.title }}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">{{ f.description }}</p>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

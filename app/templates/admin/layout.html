@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Console — {{ school_name if school_name else 'XYZ School' }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <!-- VERCEL SIDEBAR CONSOLE -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div style="width: 32px; height: 32px; background: #ffffff; color: #171717; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 0 1px rgba(255,255,255,0.2);">
+                <i class="fas fa-terminal"></i>
+            </div>
+            <h2>XYZ Console</h2>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-label">Navigation</div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.dashboard') }}" class="sidebar-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+            </div>
+            <div class="sidebar-label">Content</div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.banners') }}" class="sidebar-link {% if request.endpoint == 'admin.banners' %}active{% endif %}">
+                    <i class="fas fa-sliders-h"></i> Hero Banners
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.notices') }}" class="sidebar-link {% if request.endpoint == 'admin.notices' %}active{% endif %}">
+                    <i class="fas fa-bullhorn"></i> Notices
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.events') }}" class="sidebar-link {% if request.endpoint == 'admin.events' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.gallery') }}" class="sidebar-link {% if request.endpoint == 'admin.gallery' %}active{% endif %}">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.downloads') }}" class="sidebar-link {% if request.endpoint == 'admin.downloads' %}active{% endif %}">
+                    <i class="fas fa-download"></i> Downloads
+                </a>
+            </div>
+            
+            <div class="sidebar-label">Students</div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.inquiries') }}" class="sidebar-link {% if request.endpoint == 'admin.inquiries' %}active{% endif %}">
+                    <i class="fas fa-user-plus"></i> Inquiries
+                </a>
+            </div>
+
+            <div class="sidebar-label">Settings</div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('admin.settings') }}" class="sidebar-link {% if request.endpoint == 'admin.settings' %}active{% endif %}">
+                    <i class="fas fa-sliders-h"></i> Site Settings
+                </a>
+            </div>
+            <div class="sidebar-item">
+                <a href="{{ url_for('public.home') }}" target="_blank" class="sidebar-link">
+                    <i class="fas fa-external-link-alt"></i> Live Portal
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN ADMIN AREA -->
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="status-dot"></span>
+                <strong style="font-size: 0.9375rem; color: var(--text-dark); letter-spacing: -0.02em;">Administrator Infrastructure Management</strong>
+            </div>
+            <div class="user-profile-badge">
+                <div class="avatar">{{ current_user.full_name[0] }}</div>
+                <div>
+                    <strong style="font-size: 0.8125rem; display: block; color: var(--text-dark); line-height: 1.1;">{{ current_user.full_name }}</strong>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); font-family: 'Geist Mono', monospace;">System Administrator</span>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" style="margin-left: 14px; color: var(--vercel-ship-red); font-size: 0.8125rem; font-weight: 500;" title="Log Out"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Manage Events — Admin Panel{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 25px;">
+    <h1 style="font-size: 1.8rem; color: #0F172A;">Manage School Events</h1>
+    <p style="color: #64748B; font-size: 0.9rem;">Schedule and update school events, sports games, and academic calendar items.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+    <!-- ADD EVENT FORM -->
+    <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #0F172A;"><i class="fas fa-plus-circle" style="color: #2563EB;"></i> Add New Event</h3>
+        
+        <form action="{{ url_for('admin.add_event') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Event Title *</label>
+                <input type="text" name="title" required class="form-control" placeholder="e.g. Inter-House Sports Meet">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Event Date *</label>
+                <input type="date" name="event_date" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control">
+                    <option value="Academic">Academic</option>
+                    <option value="Sports">Sports & Athletics</option>
+                    <option value="Cultural">Cultural & Exhibition</option>
+                    <option value="Holiday">School Holiday</option>
+                    <option value="Exam">Examination</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Venue / Location</label>
+                <input type="text" name="location" class="form-control" placeholder="e.g. Main Auditorium / Sports Ground">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description *</label>
+                <textarea name="description" required class="form-control" rows="4" placeholder="Event description..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;"><i class="fas fa-calendar-plus"></i> Save Event</button>
+        </form>
+    </div>
+
+    <!-- EVENTS LIST TABLE -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;">Scheduled Events ({{ events|length }})</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if events %}
+                    {% for ev in events %}
+                    <tr>
+                        <td>
+                            <strong style="color: #0F172A;">{{ ev.title }}</strong>
+                            <span class="status-pill status-contacted" style="font-size: 0.65rem; margin-left: 6px;">{{ ev.category }}</span>
+                        </td>
+                        <td style="font-size: 0.85rem; color: #2563EB; font-weight: 600;">{{ ev.event_date.strftime('%b %d, %Y') }}</td>
+                        <td style="font-size: 0.85rem; color: #64748B;">{{ ev.location }}</td>
+                        <td style="text-align: right;">
+                            <form action="{{ url_for('admin.delete_event', id=ev.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger btn-confirm-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #94A3B8; padding: 25px;">No events scheduled.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

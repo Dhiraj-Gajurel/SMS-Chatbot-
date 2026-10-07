@@ -1,0 +1,40 @@
+{% extends 'user/layout.html' %}
+{% block title %}Student Profile — KSS Portal{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 25px;">
+    <h1 style="font-size: 1.8rem; color: #0F172A;">Student Profile</h1>
+    <p style="color: #64748B; font-size: 0.9rem;">Manage your profile information and contact details.</p>
+</div>
+
+<div style="background: white; padding: 35px; border-radius: 12px; border: 1px solid #E2E8F0; max-width: 700px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <form action="{{ url_for('user.profile') }}" method="POST">
+        <div class="form-group">
+            <label class="form-label">Username (Read-only)</label>
+            <input type="text" value="{{ current_user.username }}" readonly class="form-control" style="background: #F8FAFC;">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email Address (Read-only)</label>
+            <input type="email" value="{{ current_user.email }}" readonly class="form-control" style="background: #F8FAFC;">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" name="full_name" value="{{ current_user.full_name }}" required class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phone" value="{{ current_user.phone if current_user.phone else '' }}" class="form-control" placeholder="Contact number">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Grade / Class</label>
+            <input type="text" name="grade_class" value="{{ current_user.grade_class if current_user.grade_class else '' }}" class="form-control" placeholder="e.g. Class 10-A">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="padding: 10px 24px; margin-top: 10px;"><i class="fas fa-save"></i> Save Profile Changes</button>
+    </form>
+</div>
+{% endblock %}

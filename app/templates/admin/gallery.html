@@ -1,0 +1,93 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Manage Gallery — Admin Panel{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 25px;">
+    <h1 style="font-size: 1.8rem; color: #0F172A;">Manage Photo & Video Gallery</h1>
+    <p style="color: #64748B; font-size: 0.9rem;">Upload photo moments and video links to the public media gallery.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+    <!-- ADD GALLERY ITEM FORM -->
+    <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #0F172A;"><i class="fas fa-plus-circle" style="color: #16A34A;"></i> Add Media Item</h3>
+        
+        <form action="{{ url_for('admin.add_gallery_item') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Media Title *</label>
+                <input type="text" name="title" required class="form-control" placeholder="e.g. Science Exhibition 2081">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control">
+                    <option value="Events">School Events</option>
+                    <option value="Campus">Campus Infrastructure</option>
+                    <option value="Sports">Sports & Games</option>
+                    <option value="Celebration">Celebration & Culture</option>
+                    <option value="Academic">Academic & Science</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Media Type</label>
+                <select name="type" class="form-control">
+                    <option value="photo">Photo Image</option>
+                    <option value="video">Video</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Upload Image File</label>
+                <input type="file" name="image_file" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <input type="text" name="description" class="form-control" placeholder="Brief caption">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;"><i class="fas fa-upload"></i> Save to Gallery</button>
+        </form>
+    </div>
+
+    <!-- GALLERY ITEMS TABLE -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;">Gallery Items ({{ items|length }})</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Preview</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if items %}
+                    {% for item in items %}
+                    <tr>
+                        <td style="width: 70px;">
+                            <img src="{{ url_for('static', filename='images/' + item.media_url) if 'kankali' in item.media_url else url_for('static', filename=item.media_url) }}" style="width: 50px; height: 40px; object-fit: cover; border-radius: 6px;">
+                        </td>
+                        <td style="font-weight: 600; color: #0F172A;">{{ item.title }}</td>
+                        <td><span class="status-pill status-contacted">{{ item.category }}</span></td>
+                        <td style="text-align: right;">
+                            <form action="{{ url_for('admin.delete_gallery_item', id=item.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger btn-confirm-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #94A3B8; padding: 25px;">No gallery items uploaded yet.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

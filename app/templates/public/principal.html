@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Message from Principal — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">Message from the Principal</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">XYZ School and College, Bafal, Kathmandu</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container" style="max-width: 900px;">
+        <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: var(--shadow-xl); border: 1px solid var(--border-color);">
+            <div style="display: flex; gap: 30px; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
+                <img src="{{ url_for('static', filename='images/principal_portrait.jpg') }}" alt="Principal Photo" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-red);">
+                <div>
+                    <h2 style="font-size: 1.8rem; color: var(--primary-dark);">{{ name }}</h2>
+                    <p style="color: var(--primary-red); font-weight: 700; font-size: 1rem;">Principal, XYZ School and College</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;"><i class="fas fa-graduation-cap"></i> M.Ed, M.Sc Education</p>
+                </div>
+            </div>
+            <hr style="border: none; border-top: 1px solid #E2E8F0; margin-bottom: 30px;">
+            <div style="font-size: 1.05rem; line-height: 1.8; color: #334155;">
+                <p style="margin-bottom: 20px;">Dear Students, Parents, and Well-wishers,</p>
+                <p style="margin-bottom: 20px;">It is my distinct privilege to welcome you to XYZ School and College. Education is not merely the acquisition of knowledge; it is the transformation of character, intellect, and practical potential into lifelong success.</p>
+                <p style="margin-bottom: 20px;">{{ message }}</p>
+                <p style="margin-bottom: 20px;">We take immense pride in our state-of-the-art computer and science laboratories, digital smart classrooms, and dedicated teaching faculty who work tirelessly to ensure every student achieves their highest academic potential.</p>
+                <p>Warm regards,<br><strong>{{ name }}</strong><br>Principal</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

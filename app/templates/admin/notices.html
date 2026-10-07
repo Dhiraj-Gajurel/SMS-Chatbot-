@@ -1,0 +1,96 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Manage Notices — Admin Panel{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <div>
+        <h1 style="font-size: 1.8rem; color: #0F172A;">Manage Notices</h1>
+        <p style="color: #64748B; font-size: 0.9rem;">Publish, edit, and manage school announcements and bulletins.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+    <!-- PUBLISH FORM -->
+    <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #0F172A;"><i class="fas fa-plus-circle" style="color: #B91C1C;"></i> Publish New Notice</h3>
+        
+        <form action="{{ url_for('admin.add_notice') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Notice Title *</label>
+                <input type="text" name="title" required class="form-control" placeholder="e.g. SEE Examination Routine 2081">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control">
+                    <option value="General">General Notice</option>
+                    <option value="Result">Result Announcement</option>
+                    <option value="Vacancy">Teacher Vacancy</option>
+                    <option value="Exam">Examination Routine</option>
+                    <option value="Quotation">School Quotation</option>
+                    <option value="Admission">Admission Notice</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notice Content *</label>
+                <textarea name="content" required class="form-control" rows="5" placeholder="Write full details..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Attachment (PDF / Image)</label>
+                <input type="file" name="attachment" class="form-control">
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" name="is_urgent" id="is_urgent" style="width: 18px; height: 18px;">
+                <label for="is_urgent" style="font-weight: 600; cursor: pointer; color: #991B1B;">Mark as Urgent Notice (Shows in Top Ticker)</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;"><i class="fas fa-paper-plane"></i> Publish Notice</button>
+        </form>
+    </div>
+
+    <!-- NOTICES LIST TABLE -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;">Published Notices ({{ notices|length }})</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if notices %}
+                    {% for n in notices %}
+                    <tr>
+                        <td>
+                            <strong style="display: block; color: #0F172A;">{{ n.title }}</strong>
+                            {% if n.is_urgent %}
+                                <span class="status-pill" style="background: #FEE2E2; color: #991B1B; font-size: 0.65rem;">URGENT</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="status-pill status-contacted">{{ n.category }}</span></td>
+                        <td style="font-size: 0.85rem; color: #64748B;">{{ n.published_date.strftime('%b %d, %Y') }}</td>
+                        <td style="text-align: right;">
+                            <form action="{{ url_for('admin.delete_notice', id=n.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger btn-confirm-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #94A3B8; padding: 25px;">No notices created yet.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

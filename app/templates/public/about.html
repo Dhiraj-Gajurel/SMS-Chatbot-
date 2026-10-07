@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}About Us — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">About {{ school_name }}</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">Bafal, Kathmandu, Nepal</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+            <div>
+                <span class="section-subtitle">Our History & Legacy</span>
+                <h2 style="font-size: 2rem; margin-bottom: 20px;">Dedicated to Quality Education</h2>
+                <p style="margin-bottom: 15px; color: var(--text-main); font-size: 1rem; line-height: 1.8;">{{ about_text }}</p>
+                <p style="color: var(--text-main); font-size: 1rem; line-height: 1.8;">We believe in an educational approach that combines rigorous academic learning with hands-on practical skills, moral integrity, and leadership development.</p>
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='images/kankali_hero_banner.jpg') }}" alt="School Building" style="width: 100%; border-radius: 16px; box-shadow: var(--shadow-xl);">
+            </div>
+        </div>
+
+        <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div style="background: white; padding: 35px; border-radius: 12px; box-shadow: var(--shadow-md); border-top: 5px solid var(--primary-red);">
+                <div style="font-size: 2.2rem; color: var(--primary-red); margin-bottom: 15px;"><i class="fas fa-bullseye"></i></div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 12px;">Our Mission</h3>
+                <p style="color: var(--text-muted); line-height: 1.7;">Delivering top-notch technical and qualitative education, empowering students with creative problem-solving skills, academic discipline, and social responsibility.</p>
+            </div>
+            <div style="background: white; padding: 35px; border-radius: 12px; box-shadow: var(--shadow-md); border-top: 5px solid var(--secondary-blue);">
+                <div style="font-size: 2.2rem; color: var(--secondary-blue); margin-bottom: 15px;"><i class="fas fa-eye"></i></div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 12px;">Our Vision</h3>
+                <p style="color: var(--text-muted); line-height: 1.7;">To be recognized as a premier educational landmark in Nepal that produces visionary leaders, innovative thinkers, and compassionate global citizens.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

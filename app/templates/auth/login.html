@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Authentication — {{ school_name if school_name else 'XYZ School' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: 'Geist', sans-serif;
+        }
+        .login-card {
+            background: #171717;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14), 0 20px 40px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 420px;
+            padding: 36px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .login-logo {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            color: #171717;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+        .tab-group {
+            display: flex;
+            background: #000000;
+            padding: 3px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            font-size: 0.8125rem;
+            font-family: 'Geist', sans-serif;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: #888888;
+            transition: var(--transition-fast);
+        }
+        .tab-btn.active {
+            background: #171717;
+            color: #ffffff;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+        }
+        .demo-box {
+            background: #000000;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-top: 24px;
+            font-size: 0.8125rem;
+            color: #a1a1aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo"><i class="fas fa-user-shield"></i></div>
+            <h2 style="font-size: 1.5rem; color: #ffffff; letter-spacing: -0.03em;">Administrator Portal</h2>
+            <p style="color: #888888; font-size: 0.8125rem; margin-top: 4px;">XYZ School and College, Bafal, Kathmandu</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 15px; {% if category == 'danger' %}background: rgba(255,91,79,0.15); color: #ff5b4f; box-shadow: 0 0 0 1px rgba(255,91,79,0.3);{% else %}background: rgba(16,185,129,0.15); color: #10b981; box-shadow: 0 0 0 1px rgba(16,185,129,0.3);{% endif %}">
+                        <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('auth.login') }}" method="POST" id="loginForm">
+            <input type="hidden" name="login_type" id="loginType" value="admin">
+            
+            <div class="form-group">
+                <label class="form-label" id="identityLabel" style="color: #e4e4e7;">Admin Username or Email</label>
+                <input type="text" name="identity" id="identityInput" required class="form-control" placeholder="Enter admin username (e.g. admin)…" style="background: #000000; color: #ffffff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); font-size: 16px;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="color: #e4e4e7;">Password</label>
+                <input type="password" name="password" id="passwordInput" required class="form-control" placeholder="Enter password…" style="background: #000000; color: #ffffff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); font-size: 16px;">
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; justify-content: center; background: #ffffff; color: #171717; padding: 12px; margin-top: 12px; border-radius: var(--radius-sm); font-weight: 600;">Log In to Admin Console <i class="fas fa-arrow-right"></i></button>
+        </form>
+
+        <div class="demo-box">
+            <strong style="display: block; margin-bottom: 8px; color: #ffffff; font-family: 'Geist Mono', monospace; font-size: 0.75rem;"><i class="fas fa-key"></i> Quick Demo Access:</strong>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                <button type="button" onclick="fillDemo('admin', 'admin123')" class="btn btn-sm" style="background: var(--vercel-ship-red); color: #ffffff;">Fill Admin Credentials</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px; font-size: 0.8125rem;">
+            <a href="{{ url_for('public.home') }}" style="color: #888888;"><i class="fas fa-arrow-left"></i> Return to Main Web Portal</a>
+        </div>
+    </div>
+
+    <script>
+        function fillDemo(username, password) {
+            document.getElementById('identityInput').value = username;
+            document.getElementById('passwordInput').value = password;
+        }
+    </script>
+</body>
+</html>

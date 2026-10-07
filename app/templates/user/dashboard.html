@@ -1,0 +1,83 @@
+{% extends 'user/layout.html' %}
+{% block title %}Student Dashboard — KSS Portal{% endblock %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #1E3A8A, #2563EB); color: white; padding: 30px; border-radius: 16px; margin-bottom: 30px; box-shadow: var(--shadow-lg);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div>
+            <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Student Portal</span>
+            <h1 style="font-size: 2rem; color: white; margin-top: 8px;">Welcome back, {{ current_user.full_name }}!</h1>
+            <p style="color: #DBEAFE; font-size: 0.95rem; margin-top: 4px;"><i class="fas fa-graduation-cap"></i> {{ current_user.grade_class if current_user.grade_class else 'Grade 10-A' }} | Student ID: {{ current_user.student_id if current_user.student_id else 'KSS-2081-042' }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('public.downloads') }}" class="btn btn-primary" style="background: white; color: #1E3A8A;"><i class="fas fa-download"></i> View Exam Routines</a>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+    <!-- LATEST SCHOOL ANNOUNCEMENTS -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;"><i class="fas fa-bullhorn" style="color: #2563EB; margin-right: 8px;"></i> School Circulars & Notices</h3>
+            <a href="{{ url_for('public.notices') }}" style="font-size: 0.85rem; font-weight: 700;">View All</a>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if notices %}
+                    {% for n in notices %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('public.notice_detail', id=n.id) }}" style="font-weight: 600; color: #0F172A;">{{ n.title }}</a>
+                            {% if n.is_urgent %}<span class="status-pill" style="background: #FEE2E2; color: #991B1B; font-size: 0.65rem; margin-left: 6px;">URGENT</span>{% endif %}
+                        </td>
+                        <td style="font-size: 0.8rem; color: #64748B;">{{ n.published_date.strftime('%b %d') }}</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MY ADMISSION INQUIRIES -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;"><i class="fas fa-file-alt" style="color: #B91C1C; margin-right: 8px;"></i> My Submitted Inquiries</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Grade Applying</th>
+                    <th>Submitted On</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if my_inquiries %}
+                    {% for inq in my_inquiries %}
+                    <tr>
+                        <td style="font-weight: 600;">{{ inq.grade_applying }}</td>
+                        <td style="font-size: 0.85rem;">{{ inq.created_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <span class="status-pill {% if inq.status == 'Pending' %}status-pending{% elif inq.status == 'Contacted' %}status-contacted{% else %}status-admitted{% endif %}">
+                                {{ inq.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #94A3B8; padding: 25px;">No active admission inquiries submitted.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

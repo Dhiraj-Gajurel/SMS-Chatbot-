@@ -1,0 +1,80 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Manage Downloads — Admin Panel{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 25px;">
+    <h1 style="font-size: 1.8rem; color: #0F172A;">Manage Download Resources</h1>
+    <p style="color: #64748B; font-size: 0.9rem;">Upload syllabus, exam routines, model question sets, and prospectus PDFs.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+    <!-- UPLOAD DOWNLOAD FILE FORM -->
+    <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: #0F172A;"><i class="fas fa-plus-circle" style="color: #D97706;"></i> Upload Resource Document</h3>
+        
+        <form action="{{ url_for('admin.add_download') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Document Title *</label>
+                <input type="text" name="title" required class="form-control" placeholder="e.g. Class 10 Syllabus 2081">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control">
+                    <option value="Syllabus">Syllabus</option>
+                    <option value="Routine">Examination Routine</option>
+                    <option value="Model Question">Model Question Paper</option>
+                    <option value="Form">Admission & Official Form</option>
+                    <option value="Report">Annual Report</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Select File (PDF / DOCX) *</label>
+                <input type="file" name="resource_file" required class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;"><i class="fas fa-file-upload"></i> Upload Resource</button>
+        </form>
+    </div>
+
+    <!-- DOWNLOADS TABLE -->
+    <div class="table-card" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 style="font-size: 1.1rem; color: #0F172A;">Download Files ({{ resources|length }})</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                    <th>Count</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if resources %}
+                    {% for r in resources %}
+                    <tr>
+                        <td style="font-weight: 600; color: #0F172A;"><i class="fas fa-file-pdf" style="color: #B91C1C; margin-right: 6px;"></i> {{ r.title }}</td>
+                        <td><span class="status-pill status-contacted">{{ r.category }}</span></td>
+                        <td style="font-size: 0.85rem; color: #64748B;">{{ r.file_size }}</td>
+                        <td style="font-size: 0.85rem; color: #64748B;">{{ r.download_count }}</td>
+                        <td style="text-align: right;">
+                            <form action="{{ url_for('admin.delete_download', id=r.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger btn-confirm-delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #94A3B8; padding: 25px;">No downloadable resources uploaded yet.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

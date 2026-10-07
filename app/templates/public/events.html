@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Events & Calendar — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">School Calendar & Events</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">Stay updated with upcoming academic, athletic, and cultural activities.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div style="display: flex; flex-direction: column; gap: 25px;">
+            {% if events %}
+                {% for ev in events %}
+                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display: flex; gap: 25px; align-items: center; flex-wrap: wrap;">
+                    <div class="notice-date-badge" style="width: 80px; height: 80px; background: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8;">
+                        <span class="day" style="font-size: 1.8rem;">{{ ev.event_date.strftime('%d') }}</span>
+                        <span class="month" style="font-size: 0.85rem;">{{ ev.event_date.strftime('%b %Y') }}</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.8rem; font-weight: 800; color: #2563EB; text-transform: uppercase;">{{ ev.category }}</span>
+                        <h2 style="font-size: 1.4rem; margin: 4px 0 8px 0; color: var(--primary-dark);">{{ ev.title }}</h2>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px;">{{ ev.description }}</p>
+                        <div style="display: flex; gap: 20px; font-size: 0.85rem; color: var(--text-main); font-weight: 600;">
+                            <span><i class="fas fa-map-marker-alt" style="color: var(--primary-red);"></i> {{ ev.location }}</span>
+                            <span><i class="fas fa-clock" style="color: var(--accent-gold);"></i> Full Day Event</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: var(--text-muted);">No events scheduled at present.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

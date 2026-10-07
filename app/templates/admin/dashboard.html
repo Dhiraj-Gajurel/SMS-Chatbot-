@@ -1,0 +1,126 @@
+{% extends 'admin/layout.html' %}
+{% block title %}Dashboard Overview — Admin Panel{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 25px;">
+    <h1 style="font-size: 1.8rem; color: #0F172A;">Dashboard Overview</h1>
+    <p style="color: #64748B; font-size: 0.9rem;">Welcome back! Here is a summary of recent portal activity and content statistics.</p>
+</div>
+
+<!-- METRIC STATS -->
+<div class="admin-stats-grid">
+    <div class="admin-stat-card">
+        <div>
+            <span style="font-size: 0.8rem; color: #64748B; font-weight: 600;">NOTICES PUBLISHED</span>
+            <div class="stat-number">{{ notice_count }}</div>
+        </div>
+        <div class="stat-icon-wrapper icon-red"><i class="fas fa-bullhorn"></i></div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div>
+            <span style="font-size: 0.8rem; color: #64748B; font-weight: 600;">UPCOMING EVENTS</span>
+            <div class="stat-number">{{ event_count }}</div>
+        </div>
+        <div class="stat-icon-wrapper icon-blue"><i class="fas fa-calendar-alt"></i></div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div>
+            <span style="font-size: 0.8rem; color: #64748B; font-weight: 600;">TOTAL INQUIRIES</span>
+            <div class="stat-number">{{ inquiry_count }}</div>
+        </div>
+        <div class="stat-icon-wrapper icon-green"><i class="fas fa-user-plus"></i></div>
+    </div>
+
+    <div class="admin-stat-card">
+        <div>
+            <span style="font-size: 0.8rem; color: #64748B; font-weight: 600;">PENDING INQUIRIES</span>
+            <div class="stat-number">{{ pending_inquiries }}</div>
+        </div>
+        <div class="stat-icon-wrapper icon-amber"><i class="fas fa-clock"></i></div>
+    </div>
+</div>
+
+<!-- RECENT ADMISSION INQUIRIES TABLE -->
+<div class="table-card">
+    <div class="table-header">
+        <h3 style="font-size: 1.1rem; color: #0F172A;"><i class="fas fa-user-graduate" style="color: #B91C1C; margin-right: 8px;"></i> Recent Admission Inquiries</h3>
+        <a href="{{ url_for('admin.inquiries') }}" class="btn btn-sm btn-primary">View All Inquiries</a>
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Guardian Name</th>
+                <th>Phone</th>
+                <th>Grade Applying</th>
+                <th>Status</th>
+                <th>Submitted On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_inquiries %}
+                {% for inq in recent_inquiries %}
+                <tr>
+                    <td style="font-weight: 600;">{{ inq.student_name }}</td>
+                    <td>{{ inq.guardian_name }}</td>
+                    <td>{{ inq.phone }}</td>
+                    <td><span style="background: #EFF6FF; color: #1D4ED8; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">{{ inq.grade_applying }}</span></td>
+                    <td>
+                        <span class="status-pill {% if inq.status == 'Pending' %}status-pending{% elif inq.status == 'Contacted' %}status-contacted{% else %}status-admitted{% endif %}">
+                            {{ inq.status }}
+                        </span>
+                    </td>
+                    <td>{{ inq.created_at.strftime('%b %d, %Y') }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #94A3B8; padding: 20px;">No admission inquiries received yet.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<!-- RECENT NOTICES TABLE -->
+<div class="table-card">
+    <div class="table-header">
+        <h3 style="font-size: 1.1rem; color: #0F172A;"><i class="fas fa-bullhorn" style="color: #2563EB; margin-right: 8px;"></i> Published Notices</h3>
+        <a href="{{ url_for('admin.notices') }}" class="btn btn-sm btn-primary">Manage Notices</a>
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Urgent</th>
+                <th>Published Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recent_notices %}
+                {% for n in recent_notices %}
+                <tr>
+                    <td style="font-weight: 600;">{{ n.title }}</td>
+                    <td><span class="status-pill status-contacted">{{ n.category }}</span></td>
+                    <td>
+                        {% if n.is_urgent %}
+                            <span class="status-pill status-pending" style="background: #FEE2E2; color: #991B1B;">YES</span>
+                        {% else %}
+                            <span style="color: #94A3B8;">No</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ n.published_date.strftime('%b %d, %Y') }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #94A3B8; padding: 20px;">No notices published yet.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

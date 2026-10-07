@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 36px 0; box-shadow: var(--shadow-border);">
+    <div class="container">
+        <h1 style="font-size: 2rem; color: var(--vercel-black);">Contact {{ school_name }}</h1>
+        <p style="color: var(--vercel-text-muted); font-size: 0.95rem;">Questions about admissions, academic programs, or campus visits? Reach out directly to our administration team.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px;">
+            <div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 20px; color: var(--vercel-black);">Get In Touch</h2>
+                
+                <div style="display: flex; flex-direction: column; gap: 18px; margin-bottom: 32px;">
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--vercel-surface); color: var(--vercel-black); box-shadow: var(--shadow-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1rem; margin-bottom: 2px;">Campus Location</h4>
+                            <p style="color: var(--vercel-text-muted); font-size: 0.875rem;">{{ school_address }}</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--vercel-surface); color: var(--vercel-develop-blue); box-shadow: var(--shadow-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1rem; margin-bottom: 2px;">Phone Numbers</h4>
+                            <p style="color: var(--vercel-text-muted); font-size: 0.875rem; font-family: 'Geist Mono', monospace;">{{ school_phone }} &nbsp;•&nbsp; +977 01-4312345</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <div style="width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--vercel-surface); color: var(--vercel-ship-red); box-shadow: var(--shadow-border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 1rem; margin-bottom: 2px;">Direct Email</h4>
+                            <p style="color: var(--vercel-text-muted); font-size: 0.875rem; font-family: 'Geist Mono', monospace;">{{ school_email }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOOGLE MAP FRAME -->
+                <div style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); height: 250px;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14131.066487121773!2d85.2530182!3d27.6935933!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb23528b18a245%3A0x6a05e26c6114ec3c!2sChandragiri!5e0!3m2!1sen!2snp!4v1700000000000!5m2!1sen!2snp" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 32px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card);">
+                <h3 style="font-size: 1.25rem; margin-bottom: 18px; color: var(--vercel-black);">Send Message</h3>
+                
+                <form action="{{ url_for('public.contact') }}" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="name" required class="form-control" placeholder="Enter your full name…">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" name="email" required class="form-control" placeholder="Enter email address (e.g. name@example.com)…">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <input type="text" name="subject" class="form-control" placeholder="Subject of inquiry…">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message Content *</label>
+                        <textarea name="message" required class="form-control" rows="4" placeholder="Write message details…"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;">Submit Inquiry <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

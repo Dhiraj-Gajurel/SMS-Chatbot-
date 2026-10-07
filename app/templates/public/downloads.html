@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Downloads Center — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">Download Center</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">Access official syllabi, routines, model question papers, and school forms.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div style="background: white; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: #F8FAFC; border-bottom: 2px solid #E2E8F0; color: #64748B; font-size: 0.9rem;">
+                        <th style="padding: 16px 24px;">Resource Title</th>
+                        <th style="padding: 16px 24px;">Category</th>
+                        <th style="padding: 16px 24px;">File Size</th>
+                        <th style="padding: 16px 24px;">Downloads</th>
+                        <th style="padding: 16px 24px; text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if resources %}
+                        {% for r in resources %}
+                        <tr style="border-bottom: 1px solid #F1F5F9;">
+                            <td style="padding: 16px 24px; font-weight: 600; color: var(--primary-dark);">
+                                <i class="fas fa-file-pdf" style="color: var(--primary-red); margin-right: 10px; font-size: 1.2rem;"></i>
+                                {{ r.title }}
+                            </td>
+                            <td style="padding: 16px 24px;">
+                                <span style="background: #EFF6FF; color: #1D4ED8; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">{{ r.category }}</span>
+                            </td>
+                            <td style="padding: 16px 24px; color: var(--text-muted); font-size: 0.9rem;">{{ r.file_size }}</td>
+                            <td style="padding: 16px 24px; color: var(--text-muted); font-size: 0.9rem;"><i class="fas fa-download"></i> {{ r.download_count }}</td>
+                            <td style="padding: 16px 24px; text-align: right;">
+                                <a href="{{ url_for('public.download_file', id=r.id) }}" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8rem;"><i class="fas fa-download"></i> Download</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" style="padding: 30px; text-align: center; color: var(--text-muted);">No downloadable resources available.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

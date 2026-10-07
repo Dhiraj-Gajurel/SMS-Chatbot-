@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Photo & Video Gallery — {{ school_name }}{% endblock %}
+
+{% block content %}
+<div class="section bg-alt" style="padding: 40px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+        <h1 style="font-size: 2.2rem; color: var(--primary-dark);">Gallery & Campus Moments</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">Explore moments from school life, annual functions, sports events, and laboratories.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <!-- FILTER CATEGORIES -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px;">
+            <a href="{{ url_for('public.gallery', category='all') }}" class="btn {% if active_category == 'all' %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if active_category != 'all' %}var(--primary-dark){% endif %}; padding: 8px 18px; font-size: 0.85rem;">All Media</a>
+            {% for cat in categories %}
+                <a href="{{ url_for('public.gallery', category=cat) }}" class="btn {% if active_category == cat %}btn-primary{% else %}btn-outline{% endif %}" style="color: {% if active_category != cat %}var(--primary-dark){% endif %}; padding: 8px 18px; font-size: 0.85rem;">{{ cat }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="gallery-grid">
+            {% if items %}
+                {% for item in items %}
+                <div class="gallery-card">
+                    <img src="{{ url_for('static', filename='images/' + item.media_url) if 'kankali' in item.media_url else url_for('static', filename=item.media_url) }}" alt="{{ item.title }}">
+                    <div class="gallery-overlay">
+                        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent-gold);">{{ item.category }}</span>
+                        <h4 style="font-size: 1.1rem; margin-top: 4px;">{{ item.title }}</h4>
+                        {% if item.description %}<p style="font-size: 0.8rem; opacity: 0.9;">{{ item.description }}</p>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">No gallery items found in this category.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
